@@ -1,15 +1,13 @@
 import {
   CreateDateColumn,
   DeleteDateColumn,
-  Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
-export class BaseEntity {
+export abstract class CoreEntity {
   @PrimaryGeneratedColumn('uuid')
-  id!: number;
+  id!: string;
 
   @CreateDateColumn()
   createdAt!: Date;
@@ -18,5 +16,5 @@ export class BaseEntity {
   updatedAt!: Date;
 
   @DeleteDateColumn()
-  deledAt?: Date;
+  deletedAt?: Date;
 }
