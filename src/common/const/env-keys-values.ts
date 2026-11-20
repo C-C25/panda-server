@@ -1,3 +1,7 @@
+// Auth
+export const ENV_HASH_ROUND_KEY = 'HASH_ROUND';
+
+// DB
 export const ENV_DB_HOST_KEY = 'DB_HOST';
 export const ENV_DB_PORT_KEY = 'DB_PORT';
 export const ENV_DB_USERNAME_KEY = 'DB_USERNAME';
