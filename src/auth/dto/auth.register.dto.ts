@@ -11,7 +11,7 @@ export class AuthRegisterDto {
 
   @IsString()
   @MinLength(8)
-  @MaxLength(18)
+  @MaxLength(64)
   password!: string;
 
   @IsString()
