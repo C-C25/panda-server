@@ -23,7 +23,11 @@ export class AuthService {
       password: hash,
     });
 
-    return newUser;
     // TODO t-04 진행시 return 토큰 발급으로 바로 로그인 가능 하게 변경
+    return {
+      email: newUser.email,
+      nickname: newUser.nickname,
+      createdAt: newUser.createdAt,
+    };
   }
 }
