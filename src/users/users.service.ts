@@ -37,4 +37,15 @@ export class UsersService {
 
     return saveUser;
   }
+
+  async findByEmail(email: string) {
+    return await this.userRepo.findOne({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+      },
+    });
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthRegisterDto } from './dto/auth.register.dto';
 import * as bcrypt from 'bcrypt';
@@ -7,8 +7,10 @@ import {
   ENV_HASH_ROUND_KEY,
   ENV_JWT_ACCESS_SECRET_KEY,
   ENV_JWT_REFRESH_SECRET_KEY,
+  LOGIN_FAILED_MESSAGE,
 } from '../common/const/env-keys-values';
 import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -34,6 +36,13 @@ export class AuthService {
     });
   }
 
+  issueTokens(userId: number) {
+    return {
+      accessToken: this.signToken(userId, 'access'),
+      refreshToken: this.signToken(userId, 'refresh'),
+    };
+  }
+
   async registerWithEmail(dto: AuthRegisterDto) {
     const hash = await bcrypt.hash(
       dto.password,
@@ -45,11 +54,25 @@ export class AuthService {
       password: hash,
     });
 
-    // TODO t-04 진행시 return 토큰 발급으로 바로 로그인 가능 하게 변경
-    return {
-      email: newUser.email,
-      nickname: newUser.nickname,
-      createdAt: newUser.createdAt,
-    };
+    return this.issueTokens(newUser.id);
+  }
+
+  async validateUser(user: Pick<UserEntity, 'email' | 'password'>) {
+    const existingUser = await this.usersService.findByEmail(user.email);
+
+    if (!existingUser) {
+      throw new UnauthorizedException(LOGIN_FAILED_MESSAGE);
+    }
+
+    const isValidPassword = await bcrypt.compare(
+      user.password,
+      existingUser.password,
+    );
+
+    if (!isValidPassword) {
+      throw new UnauthorizedException(LOGIN_FAILED_MESSAGE);
+    }
+
+    return existingUser;
   }
 }
