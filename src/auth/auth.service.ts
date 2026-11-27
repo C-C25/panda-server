@@ -7,10 +7,10 @@ import {
   ENV_HASH_ROUND_KEY,
   ENV_JWT_ACCESS_SECRET_KEY,
   ENV_JWT_REFRESH_SECRET_KEY,
-  LOGIN_FAILED_MESSAGE,
 } from '../common/const/env-keys-values';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '../users/entities/user.entity';
+import { LOGIN_FAILED_MESSAGE } from '../common/const/auth-messages';
 
 @Injectable()
 export class AuthService {
